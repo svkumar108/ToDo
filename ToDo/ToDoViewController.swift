@@ -11,9 +11,16 @@ import UIKit
 class ToDoViewController: UITableViewController{
     
     var itemArray = ["sin kards", "buy eggs", "destroy jampus"]
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+            itemArray = items
+        }
+        
+       
         
     }
     
@@ -40,6 +47,28 @@ class ToDoViewController: UITableViewController{
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add New ToDo Item", message: "", preferredStyle:.alert)
+        let action = UIAlertAction(title: "ADD ITEM", style: .default) { (action) in
+            self.itemArray.append(textField.text!)
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            self.tableView.reloadData()
+           // print(self.itemArray)
+       
+        }
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Enter New Item"
+            textField = alertTextField
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
 
 }
 
